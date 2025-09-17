@@ -29,18 +29,19 @@ export class LoginPage {
   }
 
   async goto() {
-    await this.page.goto("https://exe.ua/login");
+    await this.page.goto(this._loginUrl);
   }
 
-  async fillEmailOrPhone(value: string) {
+   // --- helpers ---
+   private async fillEmailOrPhone(value: string) {
     await this._emailOrPhoneInput.fill(value);
   }
 
-  async fillPassword(value: string) {
+  private async fillPassword(value: string) {
     await this._passwordInput.fill(value);
   }
 
-  async setRememberMe(check = true) {
+  private async setRememberMe(check = true) {
     if (check) await this._rememberMeCheckbox.check();
     else await this._rememberMeCheckbox.uncheck();
   }
@@ -58,14 +59,14 @@ export class LoginPage {
   // Click on the "Login" button and wait for redirect to orders page
   async submit() {
     await Promise.all([
-      this.page.waitForURL("https://exe.ua/my/orders/"),
+      this.page.waitForURL(this._ordersUrl),
       this._enterButton.click(),
     ]);
   }
 
   // Assertion: Verify user is successfully logged in
   async assertLoggedIn() {
-    await expect(this.page).toHaveURL("https://exe.ua/my/orders/");
+    await expect(this.page).toHaveURL(this._ordersUrl);
     await expect(this.page.locator("i.fa-user")).toBeVisible();
   }
 
@@ -93,5 +94,11 @@ export class LoginPage {
     const authToken = cookies.find((c) => c.name === "auth_token");
     await expect(authToken).toBeTruthy();
     await expect(authToken?.value).not.toBe("");
+  }
+   // Assertion: Verify auth_token is NOT present (negative cases)
+   async assertNoAuthToken() {
+    const cookies = await this.page.context().cookies();
+    const authToken = cookies.find((c) => c.name === "auth_token");
+    await expect(authToken).toBeFalsy();
   }
 }
