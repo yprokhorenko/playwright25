@@ -11,7 +11,7 @@ test.describe("Registrations Tests", () => {
     await registrationPage.openRegistrationTab();
   });
 
-  test.skip("happy path registration", async ({ page }) => {
+  test.skip("happy path registration", async () => {
     // Skipped to avoid creating new accounts on every test run
     // Enable only when testing registration functionality
     const uniqueEmail = `test_${Date.now()}@gmail.com`;
@@ -26,4 +26,54 @@ test.describe("Registrations Tests", () => {
     });
     await registrationPage.assertUserIsRegistered();
   });
+
+
+  test("Surname - form accepts valid value and proceeds to validate next required input", async () => {
+    await registrationPage.fillForm({
+      surname: "Parker",
+    });
+    await registrationPage.clickRegisterButton();
+    await registrationPage.assertFormErrorMessage(
+      "Введіть ім'я та по батькові" //"Enter name and middle name"
+    );
+  });
+
+  test("Name and Middle name input - form accepts valid value and proceeds to validate next required input", async () => {
+    await registrationPage.fillForm({
+      surname: "Parker",
+      name_middleName: "Peter Junior",
+    });
+    await registrationPage.assertFormErrorMessage("Введіть телефон"); //"Enter phone number"
+  });
+
+  test("Phone number - form accepts valid value and proceeds to validate next required input", async () => {
+    await registrationPage.fillForm({
+      surname: "Parker",
+      name_middleName: "Peter Junior",
+      phone: "+380723424455",
+    });
+    await registrationPage.assertFormErrorMessage("Введіть e-mail"); //"Enter e-mail"
+  });
+
+  test("E-mail - form accepts valid value and proceeds to validate next required input", async () => {
+    await registrationPage.fillForm({
+      surname: "Parker",
+      name_middleName: "Peter Junior",
+      phone: "+380723424455",
+      mail: "sdasdwd@gmail.com",
+    });
+    await registrationPage.assertFormErrorMessage("Введіть пароль"); //"Enter password"
+  });
+
+  test("Password - form accepts valid value and proceeds to validate next required input", async () => {
+    await registrationPage.fillForm({
+      surname: "Parker",
+      name_middleName: "Peter Junior",
+      phone: "+380723424455",
+      mail: "sdasdwd@gmail.com",
+      password: "2e22DD@#4sw",
+    });
+    await registrationPage.assertFormErrorMessage("Введіть пароль"); //"Enter password"
+  });
+
 });
