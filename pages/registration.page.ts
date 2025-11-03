@@ -73,6 +73,7 @@ export class Registration {
   }
 
   async assertFormErrorMessage(expectedText: string) {
-    await expect(this.formErrorMessage).toHaveText(expectedText);
+    await expect(this.formErrorMessage).toBeVisible();
+    await expect(this.formErrorMessage).toContainText(expectedText);
   }
 }

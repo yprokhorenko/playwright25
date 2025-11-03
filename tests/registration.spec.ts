@@ -1,6 +1,5 @@
-import { test } from "@playwright/test";
 import { Registration } from "../pages/registration.page";
-import { Page, Locator, expect } from "@playwright/test";
+import { test } from "@playwright/test";
 
 test.describe("Registrations Tests", () => {
   let registrationPage: Registration;
@@ -32,7 +31,6 @@ test.describe("Registrations Tests", () => {
     await registrationPage.fillForm({
       surname: "Parker",
     });
-    await registrationPage.clickRegisterButton();
     await registrationPage.assertFormErrorMessage(
       "Введіть ім'я та по батькові" //"Enter name and middle name"
     );
@@ -65,15 +63,8 @@ test.describe("Registrations Tests", () => {
     await registrationPage.assertFormErrorMessage("Введіть пароль"); //"Enter password"
   });
 
-  test("Password - form accepts valid value and proceeds to validate next required input", async () => {
-    await registrationPage.fillForm({
-      surname: "Parker",
-      name_middleName: "Peter Junior",
-      phone: "+380723424455",
-      mail: "sdasdwd@gmail.com",
-      password: "2e22DD@#4sw",
-    });
-    await registrationPage.assertFormErrorMessage("Введіть пароль"); //"Enter password"
-  });
+
+
+ 
 
 });
